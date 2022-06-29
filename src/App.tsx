@@ -9,18 +9,22 @@ import {
   Typography,
 } from '@mui/material';
 import mermaid from 'mermaid';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import {
+  Controller,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 
-type Inputs = {
-  from: string;
-  target: string;
-  toOrArrow: string;
+type FormValues = {
+  groups: { from: string; target: string; toOrArrow: string }[];
 };
 
-const graphText = (groupElm: GroupElm) => {
+const graphText = (groups: GroupElm[]) => {
+  const lines = groups.map((group) => Group(group)).join(newLine);
   return `
     ${graphDiagram} \n
-    ${Group(groupElm)}
+    ${lines}
     ;
   `;
 };
@@ -42,33 +46,44 @@ type GroupElm = {
   target: string;
 };
 
-const Mermaid = (group: Inputs) => {
-  return `<div class="mermaid">${graphText(group)}</div>`;
+const Mermaid = (groups: GroupElm[]) => {
+  return `<div class="mermaid">${graphText(groups)}</div>`;
 };
 
 function App() {
-  const [group, setGroup] = useState({
-    from: 'Hoge',
-    target: 'Fuga',
-    toOrArrow: to,
-  });
+  const [groups, setGroups] = useState([
+    {
+      from: 'Hoge',
+      target: 'Fuga',
+      toOrArrow: to,
+    },
+  ]);
   const mermaidElm = useRef<HTMLDivElement>(null);
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<FormValues>({
+    defaultValues: {
+      groups: [{ from: 'Hoge', toOrArrow: to, target: 'Fuga' }],
+    },
+  });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => setGroup(data);
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'groups',
+  });
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => setGroups(data.groups);
 
   useEffect(() => {
     const elm = mermaidElm.current;
     if (!elm) return;
-    elm.innerHTML = Mermaid(group);
+    elm.innerHTML = Mermaid(groups);
     mermaid.init('.mermaid');
-  }, [group]);
+  }, [groups]);
 
-  const outputs = graphText(group).split('\n');
+  const outputs = graphText(groups).split('\n');
 
   return (
     <Container fixed>
@@ -76,35 +91,61 @@ function App() {
         Welcome to <span style={{ fontWeight: 'bold' }}>Flounder!</span>
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          name="from"
-          control={control}
-          defaultValue="Hoge"
-          render={({ field }) => <TextField {...field} />}
-        />
-        <Controller
-          name="toOrArrow"
-          control={control}
-          render={({ field }) => (
-            <Select {...field}>
-              <MenuItem value={to}>To</MenuItem>
-              <MenuItem value={arrow}>Arrow</MenuItem>
-            </Select>
-          )}
-        />
-        <Controller
-          name="target"
-          control={control}
-          defaultValue="Fuga"
-          render={({ field }) => <TextField {...field} />}
-        />
+        {fields.map((field, index) => {
+          console.log(field.id);
+          return (
+            <div key={field.id}>
+              <section key={field.id}>
+                <Controller
+                  name={`groups.${index}.from`}
+                  control={control}
+                  defaultValue="Hoge"
+                  render={({ field }) => <TextField {...field} />}
+                />
+                <Controller
+                  name={`groups.${index}.toOrArrow`}
+                  control={control}
+                  render={({ field }) => (
+                    <Select {...field}>
+                      <MenuItem value={to}>To</MenuItem>
+                      <MenuItem value={arrow}>Arrow</MenuItem>
+                    </Select>
+                  )}
+                />
+                <Controller
+                  name={`groups.${index}.target`}
+                  control={control}
+                  defaultValue="Fuga"
+                  render={({ field }) => <TextField {...field} />}
+                />
+                <Button type="button" onClick={() => remove(index)}>
+                  DELETE
+                </Button>
+              </section>
+            </div>
+          );
+        })}
+
+        <Button
+          type="button"
+          onClick={() =>
+            append({
+              from: '',
+              toOrArrow: '',
+              target: '',
+            })
+          }
+        >
+          ADD
+        </Button>
+
         <Button type="submit" variant="contained">
           Submit
         </Button>
       </form>
       <div ref={mermaidElm}></div>
-      {outputs.map((output) => (
-        <h5>{output}</h5>
+      {outputs.map((output, index) => (
+        <h5 key={index}>{output}</h5>
       ))}
     </Container>
   );
