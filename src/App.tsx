@@ -5,25 +5,28 @@ import mermaid from 'mermaid';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
-  example: string;
+  from: string;
+  target: string;
 };
 
-const graphText = (target: string) => {
+const graphText = ({ from, target }: { from: string; target: string }) => {
   return `
 graph LR \n
-A --- ${target} \n
-${target}-->C[forbidden] \n
-${target}-->D[fa:fa-spinner] \n
+${from} --- ${target} \n
+${target}${to}C[forbidden] \n
+${target}${to}D[fa:fa-spinner] \n
 ;
 `;
 };
 
-const Mermaid = ({ target }: { target: string }) => {
-  return `<div class="mermaid">${graphText(target)}</div>`;
+const to = '-->';
+
+const Mermaid = (group: Inputs) => {
+  return `<div class="mermaid">${graphText(group)}</div>`;
 };
 
 function App() {
-  const [target, setTarget] = useState('B');
+  const [target, setTarget] = useState({ from: 'Hoge', target: 'Fuga' });
   const mermaidElm = useRef<HTMLDivElement>(null);
   const {
     control,
@@ -31,12 +34,12 @@ function App() {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => setTarget(data.example);
+  const onSubmit: SubmitHandler<Inputs> = (data) => setTarget(data);
 
   useEffect(() => {
     const elm = mermaidElm.current;
     if (!elm) return;
-    elm.innerHTML = Mermaid({ target: target });
+    elm.innerHTML = Mermaid(target);
     mermaid.init('.mermaid');
   }, [target]);
 
@@ -49,12 +52,17 @@ function App() {
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
-          name="example"
+          name="from"
           control={control}
-          defaultValue=""
+          defaultValue="Hoge"
           render={({ field }) => <TextField {...field} />}
         />
-
+        <Controller
+          name="target"
+          control={control}
+          defaultValue="Fuga"
+          render={({ field }) => <TextField {...field} />}
+        />
         <Button type="submit" variant="contained">
           Submit
         </Button>
