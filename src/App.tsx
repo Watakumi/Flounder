@@ -99,14 +99,14 @@ function App() {
                 <Controller
                   name={`groups.${index}.from`}
                   control={control}
-                  defaultValue="Hoge"
+                  defaultValue={field.from}
                   render={({ field }) => <TextField {...field} />}
                 />
                 <Controller
                   name={`groups.${index}.toOrArrow`}
                   control={control}
                   render={({ field }) => (
-                    <Select {...field}>
+                    <Select {...field} value={to}>
                       <MenuItem value={to}>To</MenuItem>
                       <MenuItem value={arrow}>Arrow</MenuItem>
                     </Select>
@@ -115,7 +115,7 @@ function App() {
                 <Controller
                   name={`groups.${index}.target`}
                   control={control}
-                  defaultValue="Fuga"
+                  defaultValue={field.target}
                   render={({ field }) => <TextField {...field} />}
                 />
                 <Button type="button" onClick={() => remove(index)}>
@@ -130,9 +130,9 @@ function App() {
           type="button"
           onClick={() =>
             append({
-              from: '',
-              toOrArrow: '',
-              target: '',
+              from: 'Hoge',
+              toOrArrow: to,
+              target: 'Fuga',
             })
           }
         >
