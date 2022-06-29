@@ -1,20 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
-import { Button, Container, Input, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Container,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material';
 import mermaid from 'mermaid';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 type Inputs = {
   from: string;
   target: string;
+  toOrArrow: string;
 };
 
-const graphText = ({ from, target }: { from: string; target: string }) => {
+const graphText = (groupElm: GroupElm) => {
   return `
     ${graphDiagram} \n
-    ${from} ${to} ${target} \n
-    ${target}${arrow}C[forbidden] \n
-    ${target}${arrow}D[fa:fa-spinner] \n
+    ${Group(groupElm)}
     ;
   `;
 };
@@ -22,13 +28,30 @@ const graphText = ({ from, target }: { from: string; target: string }) => {
 const to = '---';
 const arrow = '-->';
 const graphDiagram = 'graph LR';
+const newLine = ' \n';
+
+const Group = ({ from, toOrArrow, target }: GroupElm) => {
+  return `
+  ${from} ${toOrArrow} ${target} \n
+  `;
+};
+
+type GroupElm = {
+  from: string;
+  toOrArrow: string;
+  target: string;
+};
 
 const Mermaid = (group: Inputs) => {
   return `<div class="mermaid">${graphText(group)}</div>`;
 };
 
 function App() {
-  const [target, setTarget] = useState({ from: 'Hoge', target: 'Fuga' });
+  const [group, setGroup] = useState({
+    from: 'Hoge',
+    target: 'Fuga',
+    toOrArrow: to,
+  });
   const mermaidElm = useRef<HTMLDivElement>(null);
   const {
     control,
@@ -36,16 +59,16 @@ function App() {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => setTarget(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => setGroup(data);
 
   useEffect(() => {
     const elm = mermaidElm.current;
     if (!elm) return;
-    elm.innerHTML = Mermaid(target);
+    elm.innerHTML = Mermaid(group);
     mermaid.init('.mermaid');
-  }, [target]);
+  }, [group]);
 
-  const outputs = graphText(target).split('\n');
+  const outputs = graphText(group).split('\n');
 
   return (
     <Container fixed>
@@ -58,6 +81,16 @@ function App() {
           control={control}
           defaultValue="Hoge"
           render={({ field }) => <TextField {...field} />}
+        />
+        <Controller
+          name="toOrArrow"
+          control={control}
+          render={({ field }) => (
+            <Select {...field}>
+              <MenuItem value={to}>To</MenuItem>
+              <MenuItem value={arrow}>Arrow</MenuItem>
+            </Select>
+          )}
         />
         <Controller
           name="target"
