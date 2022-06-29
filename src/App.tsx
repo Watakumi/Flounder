@@ -92,7 +92,6 @@ function App() {
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((field, index) => {
-          console.log(field.id);
           return (
             <div key={field.id}>
               <section key={field.id}>
