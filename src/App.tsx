@@ -15,6 +15,7 @@ import {
   useFieldArray,
   useForm,
 } from 'react-hook-form';
+import { Box } from '@mui/system';
 
 type FormValues = {
   groups: { from: string; target: string; toOrArrow: string }[];
@@ -86,10 +87,11 @@ function App() {
   const outputs = graphText(groups).split('\n');
 
   return (
-    <Container fixed>
+    <Container fixed sx={{ textAlign: 'center' }}>
       <Typography variant="h2" component="h1">
         Welcome to <span style={{ fontWeight: 'bold' }}>Flounder!</span>
       </Typography>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((field, index) => {
           return (
@@ -129,28 +131,61 @@ function App() {
           );
         })}
 
-        <Button
-          type="button"
-          variant="outlined"
-          onClick={() =>
-            append({
-              from: 'Hoge',
-              toOrArrow: to,
-              target: 'Fuga',
-            })
-          }
-        >
-          ADD
-        </Button>
+        <Box sx={{ marginTop: '3vh' }}>
+          <Button
+            type="button"
+            variant="outlined"
+            sx={{ paddingX: '1.5rem', marginX: '1rem' }}
+            onClick={() =>
+              append({
+                from: 'Hoge',
+                toOrArrow: to,
+                target: 'Fuga',
+              })
+            }
+          >
+            ADD
+          </Button>
 
-        <Button type="submit" variant="contained">
-          Submit
-        </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ paddingX: '1.5rem', marginX: '1rem' }}
+          >
+            Submit
+          </Button>
+        </Box>
       </form>
-      <div ref={mermaidElm}></div>
-      {outputs.map((output, index) => (
-        <h5 key={index}>{output}</h5>
-      ))}
+
+      <Box
+        sx={{
+          marginTop: '3vh',
+          paddingY: '3vh',
+          border: 2,
+          borderColor: 'gray',
+          borderRadius: '16px',
+        }}
+      >
+        <Typography variant="h3">Mermaid</Typography>
+        <div ref={mermaidElm}></div>
+      </Box>
+
+      <Box
+        sx={{
+          marginTop: '3vh',
+          paddingY: '3vh',
+          border: 2,
+          borderColor: 'gray',
+          borderRadius: '16px',
+        }}
+      >
+        <Typography variant="h3">Code</Typography>
+        <Box>
+          {outputs.map((output, index) => (
+            <h5 key={index}>{output}</h5>
+          ))}
+        </Box>
+      </Box>
     </Container>
   );
 }
