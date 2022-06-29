@@ -117,7 +117,11 @@ function App() {
                   defaultValue={field.target}
                   render={({ field }) => <TextField {...field} />}
                 />
-                <Button type="button" onClick={() => remove(index)}>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  onClick={() => remove(index)}
+                >
                   DELETE
                 </Button>
               </section>
@@ -127,6 +131,7 @@ function App() {
 
         <Button
           type="button"
+          variant="outlined"
           onClick={() =>
             append({
               from: 'Hoge',
