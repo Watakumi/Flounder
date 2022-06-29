@@ -12,8 +12,8 @@ const graphText = (target: string) => {
   return `
 graph LR \n
 A --- ${target} \n
-${target}-->C[fa:fa-ban forbidden] \n
-${target}-->D(fa:fa-spinner) \n
+${target}-->C[forbidden] \n
+${target}-->D[fa:fa-spinner] \n
 ;
 `;
 };
