@@ -11,16 +11,17 @@ type Inputs = {
 
 const graphText = ({ from, target }: { from: string; target: string }) => {
   return `
-graph LR \n
-${from} --- ${target} \n
-${target}${to}C[forbidden] \n
-${target}${to}D[fa:fa-spinner] \n
-;
-`;
+    ${graphDiagram} \n
+    ${from} ${to} ${target} \n
+    ${target}${arrow}C[forbidden] \n
+    ${target}${arrow}D[fa:fa-spinner] \n
+    ;
+  `;
 };
 
 const to = '---';
 const arrow = '-->';
+const graphDiagram = 'graph LR';
 
 const Mermaid = (group: Inputs) => {
   return `<div class="mermaid">${graphText(group)}</div>`;
