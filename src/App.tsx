@@ -19,7 +19,8 @@ ${target}${to}D[fa:fa-spinner] \n
 `;
 };
 
-const to = '-->';
+const to = '---';
+const arrow = '-->';
 
 const Mermaid = (group: Inputs) => {
   return `<div class="mermaid">${graphText(group)}</div>`;
