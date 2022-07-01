@@ -16,34 +16,14 @@ import {
   useForm,
 } from 'react-hook-form';
 import { Box } from '@mui/system';
-import { FormValues, GroupElm } from './types';
+import { FormValues } from './types';
 import { Code } from './component';
-
-const code = (groups: GroupElm[]) => {
-  const lines = groups.map((group) => Group(group)).join(newLine);
-  return `
-    ${graphDiagram} \n
-    ${lines}
-    ;
-  `;
-};
+import { code, mermaidHTML } from './utils';
 
 const to = '---';
 const arrow = '-->';
-const graphDiagram = 'graph LR';
-const newLine = ' \n';
 const arrowWithText = (text: string): string => {
   return `-- ${text} -->`;
-};
-
-const Group = ({ from, toOrArrow, target }: GroupElm) => {
-  return `
-  ${from} ${toOrArrow} ${target} ${newLine}
-  `;
-};
-
-const Mermaid = (groups: GroupElm[]) => {
-  return `<div class="mermaid">${code(groups)}</div>`;
 };
 
 export function Graph() {
@@ -77,14 +57,13 @@ export function Graph() {
       }
       return group;
     });
-    console.log(groups);
     setGroups(groups);
   };
 
   useEffect(() => {
     const elm = mermaidElm.current;
     if (!elm) return;
-    elm.innerHTML = Mermaid(groups);
+    elm.innerHTML = mermaidHTML(code(groups));
     mermaid.init('.mermaid');
   }, [groups]);
 
