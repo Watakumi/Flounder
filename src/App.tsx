@@ -3,6 +3,7 @@ import './App.css';
 import {
   Button,
   Container,
+  Grid,
   MenuItem,
   Select,
   TextField,
@@ -112,43 +113,71 @@ function App() {
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((field, index) => {
           return (
-            <div key={field.id}>
+            <div key={field.id} style={{ margin: '16px' }}>
               <section key={field.id}>
-                <Controller
-                  name={`groups.${index}.from`}
-                  control={control}
-                  defaultValue={field.from}
-                  render={({ field }) => <TextField {...field} />}
-                />
-                <Controller
-                  name={`groups.${index}.toOrArrow`}
-                  control={control}
-                  render={({ field }) => (
-                    <Select {...field} value={to}>
-                      <MenuItem value={to}>To</MenuItem>
-                      <MenuItem value={arrow}>Arrow</MenuItem>
-                    </Select>
-                  )}
-                />
-                <Controller
-                  name={`groups.${index}.withText`}
-                  control={control}
-                  defaultValue={field.withText}
-                  render={({ field }) => <TextField {...field} />}
-                />
-                <Controller
-                  name={`groups.${index}.target`}
-                  control={control}
-                  defaultValue={field.target}
-                  render={({ field }) => <TextField {...field} />}
-                />
-                <Button
-                  type="button"
-                  variant="outlined"
-                  onClick={() => remove(index)}
+                <Grid
+                  container
+                  sx={{ justifyContent: 'center', alignItems: 'center' }}
                 >
-                  DELETE
-                </Button>
+                  <Grid item xs={3}>
+                    <Controller
+                      name={`groups.${index}.from`}
+                      control={control}
+                      defaultValue={field.from}
+                      render={({ field }) => (
+                        <TextField {...field} label="From" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <Box sx={{ flexDirection: 'row' }}>
+                      <Controller
+                        name={`groups.${index}.toOrArrow`}
+                        control={control}
+                        render={({ field }) => (
+                          <Select {...field} sx={{ mx: 4 }} label="Relation">
+                            <MenuItem value={to}>To</MenuItem>
+                            <MenuItem value={arrow}>Arrow</MenuItem>
+                          </Select>
+                        )}
+                      />
+                      <Typography variant="h5" sx={{ display: 'inline-block' }}>
+                        with
+                      </Typography>
+                      <Controller
+                        name={`groups.${index}.withText`}
+                        control={control}
+                        defaultValue={field.withText}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            sx={{ mx: 4 }}
+                            label="Comment"
+                          />
+                        )}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Controller
+                      name={`groups.${index}.target`}
+                      control={control}
+                      defaultValue={field.target}
+                      render={({ field }) => (
+                        <TextField {...field} label="Target" />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      type="button"
+                      variant="outlined"
+                      onClick={() => remove(index)}
+                    >
+                      DELETE
+                    </Button>
+                  </Grid>
+                </Grid>
               </section>
             </div>
           );
