@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 
 import {
   Button,
-  Container,
   Grid,
   MenuItem,
   Select,
@@ -17,17 +16,9 @@ import {
   useForm,
 } from 'react-hook-form';
 import { Box } from '@mui/system';
+import { FormValues, GroupElm } from './types';
 
-type FormValues = {
-  groups: {
-    from: string;
-    target: string;
-    toOrArrow: string;
-    withText: string;
-  }[];
-};
-
-const graphText = (groups: GroupElm[]) => {
+const code = (groups: GroupElm[]) => {
   const lines = groups.map((group) => Group(group)).join(newLine);
   return `
     ${graphDiagram} \n
@@ -50,14 +41,8 @@ const Group = ({ from, toOrArrow, target }: GroupElm) => {
   `;
 };
 
-type GroupElm = {
-  from: string;
-  toOrArrow: string;
-  target: string;
-};
-
 const Mermaid = (groups: GroupElm[]) => {
-  return `<div class="mermaid">${graphText(groups)}</div>`;
+  return `<div class="mermaid">${code(groups)}</div>`;
 };
 
 export function Graph() {
@@ -102,7 +87,7 @@ export function Graph() {
     mermaid.init('.mermaid');
   }, [groups]);
 
-  const outputs = graphText(groups).split('\n');
+  const outputs = code(groups).split('\n');
 
   return (
     <>
