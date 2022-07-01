@@ -17,6 +17,7 @@ import {
 } from 'react-hook-form';
 import { Box } from '@mui/system';
 import { FormValues, GroupElm } from './types';
+import { Code } from './component';
 
 const code = (groups: GroupElm[]) => {
   const lines = groups.map((group) => Group(group)).join(newLine);
@@ -203,22 +204,7 @@ export function Graph() {
         <div ref={mermaidElm}></div>
       </Box>
 
-      <Box
-        sx={{
-          marginTop: '3vh',
-          paddingY: '3vh',
-          border: 2,
-          borderColor: 'gray',
-          borderRadius: '16px',
-        }}
-      >
-        <Typography variant="h3">Code</Typography>
-        <Box>
-          {outputs.map((output, index) => (
-            <h5 key={index}>{output}</h5>
-          ))}
-        </Box>
-      </Box>
+      <Code outputs={outputs} />
     </>
   );
 }
