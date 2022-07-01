@@ -105,11 +105,7 @@ export function Graph() {
   const outputs = graphText(groups).split('\n');
 
   return (
-    <Container fixed sx={{ textAlign: 'center' }}>
-      <Typography variant="h2" component="h1">
-        Welcome to <span style={{ fontWeight: 'bold' }}>Flounder!</span>
-      </Typography>
-
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((field, index) => {
           return (
@@ -238,6 +234,6 @@ export function Graph() {
           ))}
         </Box>
       </Box>
-    </Container>
+    </>
   );
 }
