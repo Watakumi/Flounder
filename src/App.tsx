@@ -18,7 +18,12 @@ import {
 import { Box } from '@mui/system';
 
 type FormValues = {
-  groups: { from: string; target: string; toOrArrow: string }[];
+  groups: {
+    from: string;
+    target: string;
+    toOrArrow: string;
+    withText: string;
+  }[];
 };
 
 const graphText = (groups: GroupElm[]) => {
@@ -34,10 +39,13 @@ const to = '---';
 const arrow = '-->';
 const graphDiagram = 'graph LR';
 const newLine = ' \n';
+const arrowWithText = (text: string): string => {
+  return `-- ${text} -->`;
+};
 
 const Group = ({ from, toOrArrow, target }: GroupElm) => {
   return `
-  ${from} ${toOrArrow} ${target} \n
+  ${from} ${toOrArrow} ${target} ${newLine}
   `;
 };
 
@@ -75,7 +83,16 @@ function App() {
     name: 'groups',
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => setGroups(data.groups);
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    const groups = data.groups.map((group) => {
+      if (group.withText) {
+        group.toOrArrow = arrowWithText(group.withText);
+      }
+      return group;
+    });
+    console.log(groups);
+    setGroups(groups);
+  };
 
   useEffect(() => {
     const elm = mermaidElm.current;
@@ -112,6 +129,12 @@ function App() {
                       <MenuItem value={arrow}>Arrow</MenuItem>
                     </Select>
                   )}
+                />
+                <Controller
+                  name={`groups.${index}.withText`}
+                  control={control}
+                  defaultValue={field.withText}
+                  render={({ field }) => <TextField {...field} />}
                 />
                 <Controller
                   name={`groups.${index}.target`}
