@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import {
   Button,
+  FormControl,
   Grid,
+  InputLabel,
   MenuItem,
   Select,
   TextField,
@@ -91,33 +93,51 @@ export function Graph() {
                     />
                   </Grid>
                   <Grid item xs={5}>
-                    <Box sx={{ flexDirection: 'row' }}>
-                      <Controller
-                        name={`groups.${index}.toOrArrow`}
-                        control={control}
-                        render={({ field }) => (
-                          <Select {...field} sx={{ mx: 4 }} label="Relation">
-                            <MenuItem value={to}>To</MenuItem>
-                            <MenuItem value={arrow}>Arrow</MenuItem>
-                          </Select>
-                        )}
-                      />
-                      <Typography variant="h5" sx={{ display: 'inline-block' }}>
-                        with
-                      </Typography>
-                      <Controller
-                        name={`groups.${index}.withText`}
-                        control={control}
-                        defaultValue={field.withText}
-                        render={({ field }) => (
-                          <TextField
-                            {...field}
-                            sx={{ mx: 4 }}
-                            label="Comment"
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="center"
+                      spacing={2}
+                    >
+                      <Grid item>
+                        <FormControl sx={{ minWidth: 110 }}>
+                          <InputLabel id="relation-label">Relation</InputLabel>
+                          <Controller
+                            name={`groups.${index}.toOrArrow`}
+                            control={control}
+                            render={({ field }) => (
+                              <Select
+                                {...field}
+                                labelId="relation-label"
+                                label="Relation"
+                              >
+                                <MenuItem value={to}>To</MenuItem>
+                                <MenuItem value={arrow}>Arrow</MenuItem>
+                              </Select>
+                            )}
                           />
-                        )}
-                      />
-                    </Box>
+                        </FormControl>
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          variant="h5"
+                          sx={{ display: 'inline-block' }}
+                        >
+                          with
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Controller
+                          name={`groups.${index}.withText`}
+                          control={control}
+                          defaultValue={field.withText}
+                          render={({ field }) => (
+                            <TextField {...field} label="Comment" />
+                          )}
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
                   <Grid item xs={3}>
                     <Controller
