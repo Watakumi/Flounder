@@ -15,7 +15,8 @@
     "mermaid": "^9.1.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-hook-form": "^7.33.0"
+    "react-hook-form": "^7.33.0",
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "@types/mermaid": "^8.2.9",
