@@ -1,5 +1,12 @@
-import { Container, List, ListItem, Typography } from '@mui/material';
-import { Link, Route, Routes } from 'react-router-dom';
+import {
+  Container,
+  List,
+  ListItem,
+  Link,
+  Typography,
+  Grid,
+} from '@mui/material';
+import { Link as RouterLink, Route, Routes } from 'react-router-dom';
 import { ClassDiagram } from './components/ClassDiagram';
 import { Graph } from './components/Graph';
 
@@ -10,14 +17,19 @@ function App() {
         Welcome to <span style={{ fontWeight: 'bold' }}>Flounder!</span>
       </Typography>
 
-      <List>
-        <ListItem>
-          <Link to="/">Flowchart</Link>
-        </ListItem>
-        <ListItem>
-          <Link to="/class">ClassDiagram</Link>
-        </ListItem>
-      </List>
+      <Grid container sx={{ fontSize: '24px' }}>
+        <Grid item xs={6}>
+          <Link to="/" component={RouterLink}>
+            Flowchart
+          </Link>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Link to="class" component={RouterLink}>
+            ClassDiagram
+          </Link>
+        </Grid>
+      </Grid>
 
       <Routes>
         <Route path="/" element={<Graph />} />
