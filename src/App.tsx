@@ -1,5 +1,6 @@
-import { Container, Typography } from '@mui/material';
-import { Route, Routes } from 'react-router-dom';
+import { Container, List, ListItem, Typography } from '@mui/material';
+import { Link, Route, Routes } from 'react-router-dom';
+import { ClassDiagram } from './components/ClassDiagram';
 import { Graph } from './components/Graph';
 
 function App() {
@@ -9,9 +10,18 @@ function App() {
         Welcome to <span style={{ fontWeight: 'bold' }}>Flounder!</span>
       </Typography>
 
+      <List>
+        <ListItem>
+          <Link to="/">Flowchart</Link>
+        </ListItem>
+        <ListItem>
+          <Link to="/class">ClassDiagram</Link>
+        </ListItem>
+      </List>
+
       <Routes>
         <Route path="/" element={<Graph />} />
-        <Route path="hoge" element={<div>hoge</div>} />
+        <Route path="class" element={<ClassDiagram />} />
       </Routes>
     </Container>
   );
