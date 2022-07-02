@@ -5,17 +5,18 @@ import mermaid from 'mermaid';
 
 export const code = () => {
   return `
-  classDiagram
-  class BankAccount
-  BankAccount : +String owner
-  BankAccount : +Bigdecimal balance
-  BankAccount : +deposit(amount)
-  BankAccount : +withdrawal(amount)
+  classDiagram \n
+  class BankAccount \n
+  BankAccount : +String owner \n
+  BankAccount : +Bigdecimal balance \n
+  BankAccount : +deposit(amount) \n
+  BankAccount : +withdrawal(amount) \n
   `;
 };
 
 export function ClassDiagram() {
   const mermaidElm = useRef<HTMLDivElement>(null);
+  const outputs = code().split('\n');
 
   useEffect(() => {
     const elm = mermaidElm.current;
@@ -25,17 +26,35 @@ export function ClassDiagram() {
   }, []);
 
   return (
-    <Box
-      sx={{
-        marginTop: '3vh',
-        paddingY: '3vh',
-        border: 2,
-        borderColor: 'gray',
-        borderRadius: '16px',
-      }}
-    >
-      <Typography variant="h3">Mermaid</Typography>
-      <div ref={mermaidElm}></div>
-    </Box>
+    <>
+      <Box
+        sx={{
+          marginTop: '3vh',
+          paddingY: '3vh',
+          border: 2,
+          borderColor: 'gray',
+          borderRadius: '16px',
+        }}
+      >
+        <Typography variant="h3">Mermaid</Typography>
+        <div ref={mermaidElm}></div>
+      </Box>
+      <Box
+        sx={{
+          marginTop: '3vh',
+          paddingY: '3vh',
+          border: 2,
+          borderColor: 'gray',
+          borderRadius: '16px',
+        }}
+      >
+        <Typography variant="h3">Code</Typography>
+        <Box>
+          {outputs.map((output, index) => (
+            <h5 key={index}>{output}</h5>
+          ))}
+        </Box>
+      </Box>
+    </>
   );
 }
