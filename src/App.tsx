@@ -1,4 +1,5 @@
 import { Container, Typography } from '@mui/material';
+import { Route, Routes } from 'react-router-dom';
 import { Graph } from './components/Graph';
 
 function App() {
@@ -7,7 +8,11 @@ function App() {
       <Typography variant="h2" component="h1">
         Welcome to <span style={{ fontWeight: 'bold' }}>Flounder!</span>
       </Typography>
-      <Graph />
+
+      <Routes>
+        <Route path="/" element={<Graph />} />
+        <Route path="hoge" element={<div>hoge</div>} />
+      </Routes>
     </Container>
   );
 }
