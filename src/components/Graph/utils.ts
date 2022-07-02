@@ -9,7 +9,7 @@ export const code = (groups: GroupElm[]) => {
   `;
 };
 
-const graphDiagram = 'graph LR';
+const graphDiagram = 'flowchart LR';
 const newLine = ' \n';
 const Group = ({ from, toOrArrow, target }: GroupElm) => {
   return `
