@@ -53,7 +53,7 @@ export function ClassDiagram() {
       class: [
         {
           name: 'Hoge',
-          relations: [{ type: relationships.inheritence, target: 'gege' }],
+          relations: [{ type: relationships.inheritence[0], target: 'gege' }],
           attributes: [{ name: 'hoge' }, { name: 'fewafwae' }],
         },
       ],
