@@ -117,17 +117,3 @@ export function ClassDiagram() {
     </>
   );
 }
-
-const Display = ({
-  control,
-  index,
-}: {
-  control: Control<FormValues, Object>;
-  index: number;
-}) => {
-  const data = useWatch({
-    control,
-    name: `class.${index}`,
-  });
-  return <p>{data?.name}</p>;
-};
