@@ -3,10 +3,12 @@ import { Box } from '@mui/system';
 import { useEffect, useRef } from 'react';
 import mermaid from 'mermaid';
 import {
+  Control,
   Controller,
   SubmitHandler,
   useFieldArray,
   useForm,
+  useWatch,
 } from 'react-hook-form';
 
 export const code = () => {
@@ -23,7 +25,7 @@ export const code = () => {
 type FormValues = {
   class: {
     name: string;
-    attributes: string[];
+    attributes: { name: string }[];
   }[];
 };
 export function ClassDiagram() {
@@ -32,7 +34,12 @@ export function ClassDiagram() {
 
   const { control, handleSubmit } = useForm<FormValues>({
     defaultValues: {
-      class: [{ name: 'Hoge', attributes: ['hoge', 'fuga', 'piyo'] }],
+      class: [
+        {
+          name: 'Hoge',
+          attributes: [{ name: 'hoge' }, { name: 'fewafwae' }],
+        },
+      ],
     },
   });
   const { fields, append, remove } = useFieldArray({ control, name: 'class' });
@@ -60,27 +67,8 @@ export function ClassDiagram() {
                 defaultValue={field.name}
                 render={({ field }) => <TextField {...field} label="class" />}
               />
-
-              {field.attributes.map((attribute, idx) => {
-                return (
-                  <Controller
-                    name={`class.${index}.attributes.${idx}`}
-                    control={control}
-                    defaultValue={attribute}
-                    key={idx}
-                    render={({ field }) => (
-                      <TextField {...field} label="attribute" />
-                    )}
-                  />
-                );
-              })}
-              <Button
-                type="button"
-                variant="outlined"
-                onClick={() => remove(index)}
-              >
-                DELETE
-              </Button>
+              <Attributes control={control} index={index} />
+              <Button onClick={() => remove(index)}>DELETE</Button>
             </div>
           );
         })}
@@ -89,7 +77,9 @@ export function ClassDiagram() {
           type="button"
           variant="outlined"
           onClick={() =>
-            append({ name: 'Hoge', attributes: ['hoge', 'fuga', 'piyo'] })
+            append({
+              attributes: [{ name: 'append1' }, { name: 'append2' }],
+            })
           }
         >
           Add
@@ -131,3 +121,62 @@ export function ClassDiagram() {
     </>
   );
 }
+
+const Display = ({
+  control,
+  index,
+}: {
+  control: Control<FormValues, Object>;
+  index: number;
+}) => {
+  const data = useWatch({
+    control,
+    name: `class.${index}`,
+  });
+  return <p>{data?.name}</p>;
+};
+
+const Attributes = ({
+  control,
+  index,
+}: {
+  control: Control<FormValues, Object>;
+  index: number;
+}) => {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: `class.${index}.attributes`,
+  });
+
+  return (
+    <div>
+      <Display control={control} index={index} />
+      {fields.map((field, fieldIndex) => {
+        return (
+          <div key={fieldIndex}>
+            <Controller
+              name={`class.${index}.attributes.${fieldIndex}.name`}
+              control={control}
+              defaultValue={field.name}
+              render={({ field }) => <TextField {...field} label="attribute" />}
+            />
+            <Button
+              type="button"
+              variant="contained"
+              onClick={() => remove(fieldIndex)}
+            >
+              -
+            </Button>
+          </div>
+        );
+      })}
+      <Button
+        type="submit"
+        variant="contained"
+        onClick={() => append({ name: 'hohoge' })}
+      >
+        +
+      </Button>
+    </div>
+  );
+};
