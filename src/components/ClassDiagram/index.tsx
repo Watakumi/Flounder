@@ -13,16 +13,18 @@ import {
 import { FormValues } from './types';
 import { Attributes } from './components';
 
-export const code = ({
-  name,
-  attributes,
-}: {
+type Klass = {
   name: string;
   attributes: string[];
-}) => {
+};
+
+export const code = (classes: Klass[]) => {
+  const classesBlock = classes.map((klass) =>
+    classBlock(klass.name, klass.attributes)
+  );
   return `
   classDiagram \n
-  ${classBlock(name, attributes)}
+  ${classesBlock.join('\n')}
   `;
 };
 
@@ -36,10 +38,12 @@ const classBlock = (name: string, attributes: string[]) => {
 
 export function ClassDiagram() {
   const mermaidElm = useRef<HTMLDivElement>(null);
-  const [klass, setKlass] = useState({
-    name: 'Hoge',
-    attributes: ['fuga', 'piyo'],
-  });
+  const [klass, setKlass] = useState([
+    {
+      name: 'Hoge',
+      attributes: ['fuga', 'piyo'],
+    },
+  ]);
 
   const outputs = code(klass).split('\n');
 
@@ -63,14 +67,14 @@ export function ClassDiagram() {
   }, [klass]);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    const attributes = data.class[0].attributes.map(
-      (attribute) => attribute.name
-    );
-
-    setKlass({
-      name: data.class[0].name,
-      attributes: attributes,
+    const classes = data.class.map((klass) => {
+      return {
+        name: klass.name,
+        attributes: klass.attributes.map((attribute) => attribute.name),
+      };
     });
+
+    setKlass(classes);
   };
 
   return (
