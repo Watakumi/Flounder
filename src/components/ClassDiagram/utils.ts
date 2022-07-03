@@ -8,3 +8,14 @@ export const relationships = {
   dependency: '..>',
   realization: '..|>',
 };
+
+export const visibility = {
+  public: '+',
+  private: '-',
+  protected: '#',
+  package: '~',
+};
+
+export const annotation = (text: string) => {
+  return `<< ${text} >>`;
+};
