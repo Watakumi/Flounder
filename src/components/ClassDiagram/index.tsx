@@ -11,7 +11,8 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { FormValues } from './types';
-import { Attributes } from './components';
+import { Attributes, Relations } from './components';
+import { relationships } from './utils';
 
 type Klass = {
   name: string;
@@ -52,6 +53,7 @@ export function ClassDiagram() {
       class: [
         {
           name: 'Hoge',
+          relations: [{ type: relationships.inheritence, target: 'gege' }],
           attributes: [{ name: 'hoge' }, { name: 'fewafwae' }],
         },
       ],
@@ -90,6 +92,7 @@ export function ClassDiagram() {
                 render={({ field }) => <TextField {...field} label="class" />}
               />
               <Attributes control={control} index={index} />
+              <Relations control={control} index={index} />
               <Button onClick={() => remove(index)}>DELETE</Button>
             </div>
           );
