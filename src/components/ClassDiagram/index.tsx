@@ -10,6 +10,8 @@ import {
   useForm,
   useWatch,
 } from 'react-hook-form';
+import { FormValues } from './types';
+import { Attributes } from './components';
 
 export const code = () => {
   return `
@@ -22,12 +24,6 @@ export const code = () => {
   `;
 };
 
-type FormValues = {
-  class: {
-    name: string;
-    attributes: { name: string }[];
-  }[];
-};
 export function ClassDiagram() {
   const mermaidElm = useRef<HTMLDivElement>(null);
   const outputs = code().split('\n');
@@ -134,49 +130,4 @@ const Display = ({
     name: `class.${index}`,
   });
   return <p>{data?.name}</p>;
-};
-
-const Attributes = ({
-  control,
-  index,
-}: {
-  control: Control<FormValues, Object>;
-  index: number;
-}) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `class.${index}.attributes`,
-  });
-
-  return (
-    <div>
-      <Display control={control} index={index} />
-      {fields.map((field, fieldIndex) => {
-        return (
-          <div key={fieldIndex}>
-            <Controller
-              name={`class.${index}.attributes.${fieldIndex}.name`}
-              control={control}
-              defaultValue={field.name}
-              render={({ field }) => <TextField {...field} label="attribute" />}
-            />
-            <Button
-              type="button"
-              variant="contained"
-              onClick={() => remove(fieldIndex)}
-            >
-              -
-            </Button>
-          </div>
-        );
-      })}
-      <Button
-        type="submit"
-        variant="contained"
-        onClick={() => append({ name: 'hohoge' })}
-      >
-        +
-      </Button>
-    </div>
-  );
 };
