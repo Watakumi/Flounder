@@ -1,6 +1,6 @@
 import { Button, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import {
   Control,
@@ -13,20 +13,35 @@ import {
 import { FormValues } from './types';
 import { Attributes } from './components';
 
-export const code = () => {
+export const code = ({
+  name,
+  attributes,
+}: {
+  name: string;
+  attributes: string[];
+}) => {
   return `
   classDiagram \n
-  class BankAccount \n
-  BankAccount : +String owner \n
-  BankAccount : +Bigdecimal balance \n
-  BankAccount : +deposit(amount) \n
-  BankAccount : +withdrawal(amount) \n
+  ${classBlock(name, attributes)}
+  `;
+};
+
+const classBlock = (name: string, attributes: string[]) => {
+  return `
+    class ${name}{
+      ${attributes.join('\n')}
+    }
   `;
 };
 
 export function ClassDiagram() {
   const mermaidElm = useRef<HTMLDivElement>(null);
-  const outputs = code().split('\n');
+  const [klass, setKlass] = useState({
+    name: 'Hoge',
+    attributes: ['fuga', 'piyo'],
+  });
+
+  const outputs = code(klass).split('\n');
 
   const { control, handleSubmit } = useForm<FormValues>({
     defaultValues: {
@@ -43,12 +58,19 @@ export function ClassDiagram() {
   useEffect(() => {
     const elm = mermaidElm.current;
     if (!elm) return;
-    elm.innerHTML = `<div class="mermaid">${code()}</div>`;
+    elm.innerHTML = `<div class="mermaid">${code(klass)}</div>`;
     mermaid.init('.mermaid');
-  }, []);
+  }, [klass]);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+    const attributes = data.class[0].attributes.map(
+      (attribute) => attribute.name
+    );
+
+    setKlass({
+      name: data.class[0].name,
+      attributes: attributes,
+    });
   };
 
   return (
