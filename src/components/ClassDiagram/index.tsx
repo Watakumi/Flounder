@@ -16,6 +16,7 @@ import { relationships } from './utils';
 
 type Klass = {
   name: string;
+  relations: { type: string; target: string }[];
   attributes: string[];
 };
 
@@ -23,8 +24,12 @@ export const code = (classes: Klass[]) => {
   const classesBlock = classes.map((klass) =>
     classBlock(klass.name, klass.attributes)
   );
+  const relationBlocks = classes.map((klass) =>
+    relationBlock(klass.name, klass.relations)
+  );
   return `
   classDiagram \n
+  ${relationBlocks.join('\n')}
   ${classesBlock.join('\n')}
   `;
 };
@@ -37,11 +42,21 @@ const classBlock = (name: string, attributes: string[]) => {
   `;
 };
 
+const relationBlock = (
+  from: string,
+  relations: { type: string; target: string }[]
+) => {
+  return relations
+    .map((relation) => `${from} ${relation.type} ${relation.target}`)
+    .join('\n');
+};
+
 export function ClassDiagram() {
   const mermaidElm = useRef<HTMLDivElement>(null);
   const [klass, setKlass] = useState([
     {
       name: 'Hoge',
+      relations: [{ type: relationships.inheritence[0], target: 'hoge' }],
       attributes: ['fuga', 'piyo'],
     },
   ]);
@@ -72,6 +87,7 @@ export function ClassDiagram() {
     const classes = data.class.map((klass) => {
       return {
         name: klass.name,
+        relations: klass.relations,
         attributes: klass.attributes.map((attribute) => attribute.name),
       };
     });
