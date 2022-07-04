@@ -154,9 +154,11 @@ export function ClassDiagram() {
       >
         <Typography variant="h3">Code</Typography>
         <Box>
+          <h5>```mermaid</h5>
           {outputs.map((output, index) => (
             <h5 key={index}>{output}</h5>
           ))}
+          <h5>```</h5>
         </Box>
       </Box>
     </>
