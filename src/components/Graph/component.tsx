@@ -1,13 +1,11 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { useRef, useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 export function Code({ outputs }: { outputs: Array<string> }) {
-  const [copied, setCopied] = useState(false);
   const startText = '```mermaid \n';
   const endText = '\n ```';
   const rowCode = `${startText}${outputs.join('\n')}${endText}`;
-  const mermaidText = useRef<HTMLHeadingElement>(null);
   return (
     <Box
       sx={{
@@ -25,14 +23,11 @@ export function Code({ outputs }: { outputs: Array<string> }) {
       <Typography variant="h3">Code</Typography>
 
       <CopyToClipboard text={rowCode}>
-        <button>Copy to clipboard</button>
+        <Button>Copy to clipboard</Button>
       </CopyToClipboard>
 
       <Box sx={{ textAlign: 'left', whiteSpace: 'pre-wrap' }}>
-        <h5>
-          {rowCode}
-          ```
-        </h5>
+        <h5>{rowCode}</h5>
       </Box>
     </Box>
   );

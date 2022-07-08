@@ -13,6 +13,7 @@ import {
 import { FormValues } from './types';
 import { Attributes, Relations } from './components';
 import { relationships } from './utils';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 type Klass = {
   name: string;
@@ -27,20 +28,17 @@ export const code = (classes: Klass[]) => {
   const relationBlocks = classes.map((klass) =>
     relationBlock(klass.name, klass.relations)
   );
-  return `
-  classDiagram \n
-  ${relationBlocks.join('\n')}
-  ${classesBlock.join('\n')}
-  `;
+  return `classDiagram
+${relationBlocks.join('\n')}
+${classesBlock.join('\n')}`;
 };
 
 const classBlock = (name: string, attributes: string[]) => {
-  return `
-    class ${name}{
-      ${attributes.join('\n')}
-    }
-  `;
+  return `class ${name} {\n${attributes.join('\n')}\n}`;
 };
+
+const startText = '```mermaid \n';
+const endText = '\n ```';
 
 const relationBlock = (
   from: string,
@@ -62,6 +60,7 @@ export function ClassDiagram() {
   ]);
 
   const outputs = code(klass).split('\n');
+  const rowCode = `${startText}${outputs.join('\n')}${endText}`;
 
   const { control, handleSubmit } = useForm<FormValues>({
     defaultValues: {
@@ -150,15 +149,19 @@ export function ClassDiagram() {
           border: 2,
           borderColor: 'gray',
           borderRadius: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         <Typography variant="h3">Code</Typography>
-        <Box>
-          <h5>```mermaid</h5>
-          {outputs.map((output, index) => (
-            <h5 key={index}>{output}</h5>
-          ))}
-          <h5>```</h5>
+
+        <CopyToClipboard text={rowCode}>
+          <Button>Copy to clipboard</Button>
+        </CopyToClipboard>
+        <Box sx={{ textAlign: 'left', whiteSpace: 'pre-wrap' }}>
+          <h5>{rowCode}</h5>
         </Box>
       </Box>
     </>
