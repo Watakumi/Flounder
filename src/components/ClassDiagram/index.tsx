@@ -1,4 +1,11 @@
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Divider,
+  Grid,
+  TextField,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { Box } from '@mui/system';
 import { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
@@ -94,29 +101,39 @@ export function ClassDiagram() {
     setKlass(classes);
   };
 
+  const theme = useTheme();
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {fields.map((field, index) => {
+        {fields.map((field, index, arr) => {
           return (
-            <div key={field.id}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Klass
-                    control={control}
-                    index={index}
-                    field={field}
-                    remove={remove}
-                  />
+            <>
+              <Box
+                key={field.id}
+                sx={{
+                  padding: 3,
+                }}
+              >
+                <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <Klass
+                      control={control}
+                      index={index}
+                      field={field}
+                      remove={remove}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Attributes control={control} index={index} />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Relations control={control} index={index} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Attributes control={control} index={index} />
-                </Grid>
-                <Grid item xs={12}>
-                  <Relations control={control} index={index} />
-                </Grid>
-              </Grid>
-            </div>
+              </Box>
+              {!(arr.length - 1 === index) && <Divider />}
+            </>
           );
         })}
 

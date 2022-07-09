@@ -34,7 +34,6 @@ export const Klass = ({
         defaultValue={field.name}
         render={({ field }) => <TextField {...field} label="class" />}
       />
-      <Button onClick={() => remove(index)}>DELETE</Button>
     </Box>
   );
 };
@@ -61,7 +60,7 @@ export const Attributes = ({
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              marginY: 2,
+              marginBottom: 2,
             }}
           >
             <Controller
@@ -113,7 +112,7 @@ export const Relations = ({
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              marginY: 2,
+              marginBottom: 2,
             }}
           >
             <Controller
