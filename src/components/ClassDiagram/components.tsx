@@ -1,7 +1,43 @@
-import { Button, MenuItem, Select, TextField } from '@mui/material';
-import { Control, Controller, useFieldArray } from 'react-hook-form';
+import { Box, Button, MenuItem, Select, TextField } from '@mui/material';
+import {
+  Control,
+  Controller,
+  FieldArrayWithId,
+  useFieldArray,
+  UseFieldArrayRemove,
+} from 'react-hook-form';
 import { FormValues } from './types';
 import { relationships } from './utils';
+
+export const Klass = ({
+  control,
+  index,
+  field,
+  remove,
+}: {
+  control: Control<FormValues, Object>;
+  index: number;
+  field: FieldArrayWithId<FormValues, 'class', 'id'>;
+  remove: UseFieldArrayRemove;
+}) => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Controller
+        name={`class.${index}.name`}
+        control={control}
+        defaultValue={field.name}
+        render={({ field }) => <TextField {...field} label="class" />}
+      />
+      <Button onClick={() => remove(index)}>DELETE</Button>
+    </Box>
+  );
+};
 
 export const Attributes = ({
   control,
@@ -19,7 +55,15 @@ export const Attributes = ({
     <div>
       {fields.map((field, fieldIndex) => {
         return (
-          <div key={fieldIndex}>
+          <Box
+            key={fieldIndex}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginY: 2,
+            }}
+          >
             <Controller
               name={`class.${index}.attributes.${fieldIndex}.name`}
               control={control}
@@ -30,10 +74,11 @@ export const Attributes = ({
               type="button"
               variant="contained"
               onClick={() => remove(fieldIndex)}
+              sx={{ marginX: 2 }}
             >
               -
             </Button>
-          </div>
+          </Box>
         );
       })}
       <Button
@@ -62,17 +107,23 @@ export const Relations = ({
     <div>
       {fields.map((field, fieldIndex) => {
         return (
-          <div key={fieldIndex}>
+          <Box
+            key={fieldIndex}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginY: 2,
+            }}
+          >
             <Controller
               name={`class.${index}.relations.${fieldIndex}.type`}
               control={control}
               defaultValue={field.type}
               render={({ field }) => (
                 <Select {...field}>
-                  {Object.values(relationships).map((relationship) => (
-                    <MenuItem value={relationship[0]}>
-                      {relationship[1]}
-                    </MenuItem>
+                  {Object.values(relationships).map(([value, name]) => (
+                    <MenuItem value={value}>{name}</MenuItem>
                   ))}
                 </Select>
               )}
@@ -87,10 +138,11 @@ export const Relations = ({
               type="button"
               variant="contained"
               onClick={() => remove(fieldIndex)}
+              sx={{ marginX: 2 }}
             >
               -
             </Button>
-          </div>
+          </Box>
         );
       })}
       <Button

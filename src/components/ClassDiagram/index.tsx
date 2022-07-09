@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
@@ -11,7 +11,7 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { FormValues } from './types';
-import { Attributes, Relations } from './components';
+import { Attributes, Klass, Relations } from './components';
 import { relationships } from './utils';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
@@ -100,34 +100,50 @@ export function ClassDiagram() {
         {fields.map((field, index) => {
           return (
             <div key={field.id}>
-              <Controller
-                name={`class.${index}.name`}
-                control={control}
-                defaultValue={field.name}
-                render={({ field }) => <TextField {...field} label="class" />}
-              />
-              <Attributes control={control} index={index} />
-              <Relations control={control} index={index} />
-              <Button onClick={() => remove(index)}>DELETE</Button>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Klass
+                    control={control}
+                    index={index}
+                    field={field}
+                    remove={remove}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Attributes control={control} index={index} />
+                </Grid>
+                <Grid item xs={12}>
+                  <Relations control={control} index={index} />
+                </Grid>
+              </Grid>
             </div>
           );
         })}
 
-        <Button
-          type="button"
-          variant="outlined"
-          onClick={() =>
-            append({
-              attributes: [{ name: 'append1' }, { name: 'append2' }],
-            })
-          }
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          Add
-        </Button>
+          <Button
+            type="button"
+            variant="outlined"
+            onClick={() =>
+              append({
+                attributes: [{ name: 'append1' }, { name: 'append2' }],
+              })
+            }
+            sx={{ marginX: 2 }}
+          >
+            Add
+          </Button>
 
-        <Button type="submit" variant="contained">
-          Submit
-        </Button>
+          <Button type="submit" variant="contained" sx={{ marginX: 2 }}>
+            Submit
+          </Button>
+        </Box>
       </form>
 
       <Box
